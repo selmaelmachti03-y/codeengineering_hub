@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.title }} · CodeEngineering Hub{% endblock %}
+{% block content %}
+<div class="breadcrumb"><a href="/">← All lessons</a><span>/</span><span>{{ lesson.category }}</span></div>
+<div class="lesson-layout">
+  <article class="lesson-content">
+    <div class="eyebrow muted">{{ lesson.category }} · {{ lesson.level }} · {{ lesson.duration }}</div>
+    <h1 class="lesson-title">{{ lesson.title }}</h1><p class="lesson-lead">{{ lesson.summary }}</p>
+    <div class="objectives"><strong>What you'll learn</strong><ul>{% for item in lesson.objectives %}<li>{{ item }}</li>{% endfor %}</ul></div>
+    {% for heading, body in lesson.sections %}
+    <section class="content-section"><h2>{{ heading }}</h2><p>{{ body }}</p></section>
+    {% endfor %}
+    <section class="content-section"><h2>See it in practice</h2><pre><code>{{ lesson.code }}</code></pre><p class="code-note">{{ lesson.code_note }}</p></section>
+    <section class="quiz">
+      <div class="eyebrow">QUICK KNOWLEDGE CHECK</div><h2>{{ lesson.question }}</h2>
+      {% if request.query_params.get('result') == 'correct' %}<div class="feedback success">Correct! {{ lesson.explanation }}</div>
+      {% elif request.query_params.get('result') == 'tryagain' %}<div class="feedback error">Not quite. Review the lesson and try again.</div>{% endif %}
+      <form method="post" action="/lesson/{{ lesson.id }}/quiz">
+        {% for choice in lesson.choices %}<label class="choice"><input type="radio" name="answer" value="{{ loop.index0 }}" required {% if selected_answer == loop.index0 %}checked{% endif %}><span>{{ choice }}</span></label>{% endfor %}
+        <button class="btn btn-dark" type="submit">Check my answer →</button>
+      </form>
+    </section>
+    <form method="post" action="/lesson/{{ lesson.id }}/complete"><button class="btn btn-outline" type="submit">✓ Mark lesson as complete</button></form>
+  </article>
+  <aside class="lesson-aside"><div class="aside-card"><span class="aside-label">YOUR PROGRESS</span><div class="aside-number">{% if lesson.id in completed %}100%{% else %}In progress{% endif %}</div><p>{% if lesson.id in completed %}You completed this module. Great work!{% else %}Finish the lesson and test your understanding with the quiz.{% endif %}</p><div class="aside-line"></div><span class="aside-label">MODULE DETAILS</span><div class="detail-row"><span>Level</span><b>{{ lesson.level }}</b></div><div class="detail-row"><span>Estimated time</span><b>{{ lesson.duration }}</b></div><div class="detail-row"><span>Topic</span><b>{{ lesson.category }}</b></div></div></aside>
+</div>
+{% endblock %}

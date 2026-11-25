@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Learn computer engineering step by step with clear lessons and quizzes.">
+  <title>{% block title %}CodeEngineering Hub{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/"><span class="brand-mark">&lt;/&gt;</span><span>CodeEngineering<span class="brand-light"> Hub</span></span></a>
+  <nav><a href="/">Explore</a><a href="/favorites">Saved lessons</a><a href="https://github.com/" target="_blank" rel="noreferrer">GitHub ↗</a></nav>
+</header>
+<main class="container">{% block content %}{% endblock %}</main>
+<footer><span>CodeEngineering Hub</span><span>Learn. Build. Understand.</span></footer>
+</body></html>

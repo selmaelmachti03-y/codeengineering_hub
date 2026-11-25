@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Explore lessons · CodeEngineering Hub{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="eyebrow"><span class="pulse"></span> YOUR COMPUTER SCIENCE LEARNING SPACE</div>
+  <h1>Build your skills.<br><span>One concept at a time.</span></h1>
+  <p class="hero-copy">A practical library of computer engineering lessons, examples, and quick quizzes — designed to help you learn by understanding.</p>
+  <div class="stats">
+    <div><strong>{{ total }}</strong><small>Learning modules</small></div>
+    <div><strong>{{ completed|length }}<em>/{{ total }}</em></strong><small>Completed</small></div>
+    <div><strong>{{ favorites|length }}</strong><small>Saved lessons</small></div>
+  </div>
+  <div class="progress-track"><span style="width: {{ (completed|length / total * 100) if total else 0 }}%"></span></div>
+</section>
+<section class="library">
+  <div class="section-heading"><div><div class="eyebrow muted">THE LIBRARY</div><h2>{% if favorites_view %}Your saved lessons{% else %}Explore the fundamentals{% endif %}</h2></div><span class="result-count">{{ lessons|length }} lessons</span></div>
+  <form class="filters" method="get" action="/">
+    <label class="search"><span>⌕</span><input name="q" value="{{ q }}" placeholder="Search topics, skills, lessons..."></label>
+    <select name="category" aria-label="Filter by category">
+      {% for c in categories %}<option value="{{ c }}" {% if c == selected_category %}selected{% endif %}>{{ c }}</option>{% endfor %}
+    </select>
+    <button class="btn btn-dark" type="submit">Find lessons</button>
+  </form>
+  {% if lessons %}
+  <div class="lesson-grid">
+    {% for lesson in lessons %}
+    <article class="lesson-card">
+      <div class="card-top"><span class="category-dot">{{ lesson.category }}</span><span class="duration">{{ lesson.duration }}</span></div>
+      <div class="card-icon icon-{{ loop.index % 5 }}">{{ ["⌘","⌬","∑","{}","▤","⌁","◎","◫"][loop.index0] }}</div>
+      <h3>{{ lesson.title }}</h3><p>{{ lesson.summary }}</p>
+      <div class="card-bottom"><span class="level">{{ lesson.level }}</span>
+        <div class="card-actions">
+          {% if lesson.id in favorites %}<span class="saved">♥ Saved</span>{% endif %}
+          {% if lesson.id in completed %}<span class="done">✓ Done</span>{% endif %}
+          <a class="text-link" href="/lesson/{{ lesson.id }}">Open lesson <span>→</span></a>
+        </div>
+      </div>
+      <form method="post" action="/lesson/{{ lesson.id }}/favorite" class="favorite-form"><button title="Save or unsave lesson" aria-label="Save or unsave {{ lesson.title }}">♡</button></form>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}<div class="empty"><div>⌕</div><h3>No lessons found</h3><p>Try another keyword or choose a different category.</p><a href="/">Clear filters →</a></div>{% endif %}
+</section>
+{% endblock %}
